@@ -11,8 +11,8 @@ Additional features:
 * Redesigned Widgets
 * System Default Theme (Switch Theme Based On your Device Theme)
 * Removed Navigation Drawer
-* 
-* [...and more!](https://github.com/AdrienPoupa/VinylMusicPlayer/blob/master/CHANGELOG.md)
+* Fast-Forward and Rewind Functions
+* [...and more!](https://github.com/CassetteMusicPlayer/blob/master/CHANGELOG.md)
 
 ![Screenshots](./art/art.png?raw=true)
 
