@@ -12,7 +12,7 @@ Additional features:
 * System Default Theme (Switch Theme Based On your Device Theme)
 * Removed Navigation Drawer
 * Fast-Forward and Rewind Functions
-* [...and more!](https://github.com/CassetteMusicPlayer/blob/master/CHANGELOG.md)
+* [...and more!](https://github.com/TheTerminatorOfProgramming/CassetteMusicPlayer/blob/master/CHANGELOG.md)
 
 ![Screenshots](./art/art.png?raw=true)
 
