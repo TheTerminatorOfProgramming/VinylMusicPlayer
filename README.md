@@ -14,7 +14,7 @@ Additional features:
 * Fast-Forward and Rewind Functions
 * [...and more!](https://github.com/TheTerminatorOfProgramming/CassetteMusicPlayer/blob/master/CHANGELOG.md)
 
-![Screenshots](./art/art_card.png?raw=true ./art/art_flat.png?raw=true)
+![Screenshots](./art/art_card.png?raw=true)
 
 App Icon made by [Nikita Golubev](https://www.flaticon.com/authors/nikita-golubev) from www.flaticon.com
 
