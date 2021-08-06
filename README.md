@@ -18,8 +18,6 @@ Additional features:
 
 ![](./art/art_card.jpg?raw=true)
 
-App Icon made by [Nikita Golubev](https://www.flaticon.com/authors/nikita-golubev) from www.flaticon.com
+App Icon made by [Freepik](https://www.flaticon.com/premium-icon/cassette-tape_2842778) from www.flaticon.com
 
-Notification Icon made by [Nikita Golubev](https://www.flaticon.com/authors/nikita-golubev) from www.flaticon.com
-
-Album image by [Virginia State Parks](https://www.flickr.com/photos/vastateparksstaff/38645226714/) (CC BY 2.0)
+Notification Icon made by [Freepik](https://www.flaticon.com/premium-icon/cassette-tape_2842768) from www.flaticon.com
