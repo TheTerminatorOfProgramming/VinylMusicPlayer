@@ -1,0 +1,26 @@
+<resources>
+
+    <style name="Theme.Cassette" parent="Theme.Cassette.Base">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowSharedElementsUseOverlay">false</item>
+    </style>
+
+    <style name="Theme.Cassette.Light" parent="Theme.Cassette.Base.Light">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowSharedElementsUseOverlay">false</item>
+    </style>
+
+    <style name="Theme.Cassette.Black" parent="Theme.Cassette.Base.Black">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowSharedElementsUseOverlay">false</item>
+    </style>
+
+    <style name="Theme.Cassette.Notification" parent="@android:style/TextAppearance.Material.Notification" />
+
+    <style name="Theme.Cassette.Notification.Title" parent="@android:style/TextAppearance.Material.Notification.Title" />
+
+    <style name="Fab" parent="FabParent">
+        <item name="android:transitionName">@string/transition_fab</item>
+    </style>
+
+</resources>

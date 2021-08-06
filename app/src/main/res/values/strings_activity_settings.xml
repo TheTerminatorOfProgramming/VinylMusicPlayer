@@ -1,0 +1,53 @@
+<resources>
+
+    <string-array name="pref_general_theme_list_titles">
+        <item>@string/light_theme_name</item>
+        <item>@string/dark_theme_name</item>
+        <item>@string/black_theme_name</item>
+        <item>@string/follow_system_theme_dark_name</item>
+        <item>@string/follow_system_theme_black_name</item>
+    </string-array>
+
+    <string-array name="pref_general_theme_list_values">
+        <item>light</item>
+        <item>dark</item>
+        <item>black</item>
+        <item>system_dark</item>
+        <item>system_black</item>
+    </string-array>
+
+    <string-array name="pref_theme_style_list_titles">
+        <item>@string/classic_theme_style_name</item>
+        <item>@string/rounded_theme_style_name</item>
+    </string-array>
+
+    <string-array name="pref_theme_style_list_values">
+        <item>classic</item>
+        <item>rounded</item>
+    </string-array>
+
+    <string-array name="pref_auto_download_images_titles">
+        <item>@string/always</item>
+        <item>@string/only_on_wifi</item>
+        <item>@string/never</item>
+    </string-array>
+
+    <string-array name="pref_auto_download_images_values">
+        <item>always</item>
+        <item>only_wifi</item>
+        <item>never</item>
+    </string-array>
+
+    <string-array name="pref_audio_replaygain_source_mode_titles">
+        <item>@string/none</item>
+        <item>@string/track</item>
+        <item>@string/album</item>
+    </string-array>
+
+    <string-array name="pref_audio_replaygain_source_mode_values">
+        <item>none</item>
+        <item>track</item>
+        <item>album</item>
+    </string-array>
+
+</resources>

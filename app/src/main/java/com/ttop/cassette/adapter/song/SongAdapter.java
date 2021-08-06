@@ -1,0 +1,316 @@
+package com.ttop.cassette.adapter.song;
+
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.util.Pair;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.afollestad.materialcab.MaterialCab;
+import com.kabouzeid.appthemehelper.util.ColorUtil;
+import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
+import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
+import com.ttop.cassette.R;
+import com.ttop.cassette.adapter.base.AbsMultiSelectAdapter;
+import com.ttop.cassette.adapter.base.MediaEntryViewHolder;
+import com.ttop.cassette.databinding.ItemGridBinding;
+import com.ttop.cassette.databinding.ItemListBinding;
+import com.ttop.cassette.databinding.ItemListSingleRowBinding;
+import com.ttop.cassette.discog.tagging.MultiValuesTagUtil;
+import com.ttop.cassette.helper.MusicPlayerRemote;
+import com.ttop.cassette.helper.SortOrder;
+import com.ttop.cassette.helper.menu.SongMenuHelper;
+import com.ttop.cassette.helper.menu.SongsMenuHelper;
+import com.ttop.cassette.interfaces.CabHolder;
+import com.ttop.cassette.model.Song;
+import com.ttop.cassette.util.ImageTheme.ThemeStyleUtil;
+import com.ttop.cassette.util.MusicUtil;
+import com.ttop.cassette.util.NavigationUtil;
+import com.ttop.cassette.util.PlayingSongDecorationUtil;
+import com.ttop.cassette.util.PreferenceUtil;
+
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+/**
+ * @author Karim Abou Zeid (kabouzeid)
+ */
+public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, Song> implements MaterialCab.Callback, FastScrollRecyclerView.SectionedAdapter {
+
+    protected final AppCompatActivity activity;
+    protected ArrayList<Song> dataSet;
+
+    protected int itemLayoutRes;
+
+    protected boolean usePalette = false;
+    protected boolean showSectionName = true;
+    protected boolean showAlbumImage = true;
+
+    public RecyclerView recyclerView;
+
+    public SongAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, @LayoutRes int itemLayoutRes, boolean usePalette, @Nullable CabHolder cabHolder) {
+        this(activity, dataSet, itemLayoutRes, usePalette, cabHolder, true);
+    }
+
+    public SongAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, @LayoutRes int itemLayoutRes, boolean usePalette, @Nullable CabHolder cabHolder, boolean showSectionName) {
+        super(activity, cabHolder, R.menu.menu_media_selection);
+        this.activity = activity;
+        this.dataSet = dataSet;
+        this.itemLayoutRes = itemLayoutRes;
+        this.usePalette = usePalette;
+        this.showSectionName = showSectionName;
+        setHasStableIds(true);
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView rV) {
+        super.onAttachedToRecyclerView(rV);
+        recyclerView = rV;
+    }
+
+    public void swapDataSet(ArrayList<Song> dataSet) {
+        this.dataSet = dataSet;
+        notifyDataSetChanged();
+    }
+
+    public boolean isUsePalette() {
+        return this.usePalette;
+    }
+
+    public void usePalette(boolean usePalette) {
+        this.usePalette = usePalette;
+        notifyDataSetChanged();
+    }
+
+    public boolean isShowAlbumImage() {
+        return this.showAlbumImage;
+    }
+
+    public ArrayList<Song> getDataSet() {
+        return dataSet;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return dataSet.get(position).id;
+    }
+
+    @Override
+    @NonNull
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(activity);
+        if (itemLayoutRes == R.layout.item_list) {
+            ItemListBinding binding = ItemListBinding.inflate(inflater, parent, false);
+            return createViewHolder(binding);
+        }
+        else if (itemLayoutRes == R.layout.item_grid) {
+            ItemGridBinding binding = ItemGridBinding.inflate(inflater, parent, false);
+            return createViewHolder(binding);
+        }
+        else {
+            throw new AssertionError("Unsupported song layout=" + itemLayoutRes);
+        }
+    }
+
+    @NonNull
+    protected ViewHolder createViewHolder(@NonNull ItemListSingleRowBinding binding) {
+        return new ViewHolder(binding);
+    }
+
+    @NonNull
+    protected ViewHolder createViewHolder(@NonNull ItemListBinding binding) {
+        return new ViewHolder(binding);
+    }
+
+    @NonNull
+    protected ViewHolder createViewHolder(@NonNull ItemGridBinding binding) {
+        return new ViewHolder(binding);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+        final Song song = dataSet.get(position);
+
+        boolean isChecked = isChecked(song);
+        holder.itemView.setActivated(isChecked);
+
+        if (holder.shortSeparator != null) {
+            if (holder.getAdapterPosition() == getItemCount() - 1) {
+                holder.shortSeparator.setVisibility(View.GONE);
+            } else {
+                holder.shortSeparator.setVisibility(ThemeStyleUtil.getInstance().getShortSeparatorVisibilityState());
+            }
+        }
+
+        if (holder.title != null) {
+            holder.title.setText(song.title);
+        }
+        if (holder.text != null) {
+            holder.text.setText(getSongText(song));
+        }
+
+        PlayingSongDecorationUtil.decorate(this, holder, song, activity);
+    }
+
+    public void setColors(int color, ViewHolder holder) {
+        if (holder.paletteColorContainer != null) {
+            holder.paletteColorContainer.setBackgroundColor(color);
+            if (holder.title != null) {
+                holder.title.setTextColor(MaterialValueHelper.getPrimaryTextColor(activity, ColorUtil.isColorLight(color)));
+            }
+            if (holder.text != null) {
+                holder.text.setTextColor(MaterialValueHelper.getSecondaryTextColor(activity, ColorUtil.isColorLight(color)));
+            }
+        }
+    }
+
+    protected String getSongText(Song song) {
+        return MusicUtil.getSongInfoString(song);
+    }
+
+    @Override
+    public int getItemCount() {
+        return dataSet.size();
+    }
+
+    @Override
+    protected Song getIdentifier(int position) {
+        return dataSet.get(position);
+    }
+
+    @Override
+    protected String getName(Song song) {
+        return song.title;
+    }
+
+    @Override
+    protected void onMultipleItemAction(@NonNull MenuItem menuItem, @NonNull ArrayList<Song> selection) {
+        SongsMenuHelper.handleMenuClick(activity, selection, menuItem.getItemId());
+    }
+
+    @NonNull
+    @Override
+    public String getSectionName(int position) {
+        if (!showSectionName) {
+            return "";
+        }
+
+        @Nullable String sectionName = null;
+        switch (PreferenceUtil.getInstance().getSongSortOrder()) {
+            case SortOrder.SongSortOrder.SONG_A_Z:
+            case SortOrder.SongSortOrder.SONG_Z_A:
+                sectionName = dataSet.get(position).title;
+                break;
+            case SortOrder.SongSortOrder.SONG_ALBUM:
+                sectionName = dataSet.get(position).albumName;
+                break;
+            case SortOrder.SongSortOrder.SONG_ARTIST:
+                sectionName = MultiValuesTagUtil.infoString(dataSet.get(position).artistNames);
+                break;
+            case SortOrder.SongSortOrder.SONG_DATE_ADDED_REVERSE:
+                Date date = new Date(1000 * dataSet.get(position).dateAdded);
+                DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(activity);
+                sectionName = dateFormat.format(date);
+                break;
+            case SortOrder.SongSortOrder.SONG_YEAR_REVERSE:
+                return MusicUtil.getYearString(dataSet.get(position).year);
+        }
+
+        return MusicUtil.getSectionName(sectionName);
+    }
+
+    public class ViewHolder extends MediaEntryViewHolder {
+        protected int DEFAULT_MENU_RES = SongMenuHelper.MENU_RES;
+
+        public ViewHolder(@NonNull ItemListSingleRowBinding binding) {
+            super(binding);
+
+            setImageTransitionName(activity.getString(R.string.transition_album_art));
+            setupMenuHandlers();
+        }
+
+        public ViewHolder(@NonNull ItemListBinding binding) {
+            super(binding);
+
+            View itemView = binding.getRoot();
+            ThemeStyleUtil.getInstance().setHeightListItem(itemView, activity.getResources().getDisplayMetrics().density);
+            imageBorderTheme.setRadius(ThemeStyleUtil.getInstance().getAlbumRadiusImage(activity));
+
+            setImageTransitionName(activity.getString(R.string.transition_album_art));
+            setupMenuHandlers();
+        }
+
+        public ViewHolder(@NonNull ItemGridBinding binding) {
+            super(binding);
+
+            setImageTransitionName(activity.getString(R.string.transition_album_art));
+            imageBorderTheme.setRadius(ThemeStyleUtil.getInstance().getAlbumRadiusImage(activity));
+        }
+
+        private void setupMenuHandlers() {
+            menu.setOnTouchListener((v, ev) -> {
+                menu.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            });
+            menu.setOnClickListener(new SongMenuHelper.OnClickSongMenu(activity) {
+                @Override
+                public Song getSong() {
+                    return ViewHolder.this.getSong();
+                }
+
+                @Override
+                public int getMenuRes() {
+                    return getSongMenuRes();
+                }
+
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    return onSongMenuItemClick(item) || super.onMenuItemClick(item);
+                }
+            });
+        }
+
+        protected Song getSong() {
+            final int position = getAdapterPosition();
+            if (position < 0 || position >= dataSet.size()) {return Song.EMPTY_SONG;}
+
+            return dataSet.get(getAdapterPosition());
+        }
+
+        protected int getSongMenuRes() {
+            return DEFAULT_MENU_RES;
+        }
+
+        protected boolean onSongMenuItemClick(MenuItem item) {
+            if ((image != null) && (image.getVisibility() == View.VISIBLE) && (item.getItemId() == R.id.action_go_to_album)) {
+                Pair[] albumPairs = new Pair[]{
+                        Pair.create(image, activity.getResources().getString(R.string.transition_album_art))
+                };
+                NavigationUtil.goToAlbum(activity, getSong().albumId, albumPairs);
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (isInQuickSelectMode()) {
+                toggleChecked(getAdapterPosition());
+            } else {
+                MusicPlayerRemote.openQueue(dataSet, getAdapterPosition(), true);
+            }
+        }
+
+        @Override
+        public boolean onLongClick(View view) {
+            return toggleChecked(getAdapterPosition());
+        }
+    }
+}

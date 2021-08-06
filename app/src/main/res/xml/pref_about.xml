@@ -1,0 +1,25 @@
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory android:title="@string/pref_header_about">
+
+        <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreference
+            app:iconSpaceReserved="false"
+            android:key="app_info"
+            android:title="@string/pref_title_app_info"
+            android:summary="@string/pref_summary_app_info"/>
+
+        <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreference
+            app:iconSpaceReserved="false"
+            android:key="intro"
+            android:title="@string/pref_title_intro_rerun"
+            android:summary="@string/pref_summary_intro_rerun"/>
+
+        <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreference
+            app:iconSpaceReserved="false"
+            android:key="about"
+            android:title="@string/pref_title_about"
+            android:summary="@string/pref_summary_about"/>
+    </com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

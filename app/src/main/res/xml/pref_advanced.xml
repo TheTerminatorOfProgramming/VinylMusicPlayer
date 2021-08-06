@@ -1,0 +1,63 @@
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory android:title="@string/pref_header_advanced">
+
+        <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreference
+            app:iconSpaceReserved="false"
+            android:key="optimization"
+            android:title="@string/pref_title_battery_optimization"
+            android:summary="@string/pref_summary_battery_optimization"/>
+
+        <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEListPreference
+            app:iconSpaceReserved="false"
+            android:key="podcast"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:summary="@string/pref_summary_podcast"
+            android:title="@string/pref_title_podcast" />
+
+        <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATESwitchPreference
+            app:iconSpaceReserved="false"
+            android:defaultValue="false"
+            android:key="extra_controls"
+            android:summary="@string/pref_summary_extra_controls"
+            android:title="@string/pref_title_extra_controls" />
+
+        <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATESwitchPreference
+            app:iconSpaceReserved="false"
+            android:defaultValue="false"
+            android:key="show_now_playing"
+            android:summary="@string/pref_summary_expand_now_playing_panel"
+            android:title="@string/pref_title_expand_now_playing_panel" />
+
+        <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATESwitchPreference
+            app:iconSpaceReserved="false"
+            android:defaultValue="false"
+            android:key="headset_autoplay"
+            android:summary="@string/pref_summary_toggle_headset"
+            android:title="@string/pref_title_toggle_headset" />
+
+        <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATESwitchPreference
+            app:iconSpaceReserved="false"
+            android:defaultValue="true"
+            android:key="bluetooth_autoplay"
+            android:summary="@string/pref_summary_bluetooth_playback"
+            android:title="@string/pref_title_bluetooth_playback" />
+
+        <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEListPreference
+            app:iconSpaceReserved="false"
+            android:key="bluetooth_delay"
+            android:summary="@string/pref_summary_bluetooth_playback_delay"
+            android:title="@string/pref_title_bluetooth_playback_delay"
+            android:dependency="bluetooth_autoplay"/>
+
+        <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATESwitchPreference
+            app:iconSpaceReserved="false"
+            android:defaultValue="true"
+            android:key="pause_on_zero"
+            android:summary="@string/pref_summary_keep_pause_on_zero_volume"
+            android:title="@string/pref_title_keep_pause_on_zero_volume" />
+    </com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

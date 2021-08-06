@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Cassette</string>
+    <string name="app_short_name" translatable="false">Cassette</string>
+
+    <string name="TTOP" translatable="false">Jesse Collins (TTOP)</string>
+    <string name="adrien_poupa" translatable="false">Adrien Poupa</string>
+    <string name="karim_abou_zeid" translatable="false">Karim Abou Zeid</string>
+    <string name="aidan_follestad" translatable="false">Aidan Follestad</string>
+    <string name="freepik" translatable="false">Freepik</string>
+
+    <string name="git_hub" translatable="false">GitHub</string>
+
+    <string name="card" translatable="false">Card</string>
+    <string name="flat" translatable="false">Flat</string>
+
+    <string name="license_dialog_style" translatable="false">
+        body {
+            background-color: #{bg-color};
+            color: #{text-color};
+            font-family: sans-serif;
+            overflow-wrap: break-word;
+        }
+        pre {
+            background-color: #{license-bg-color};
+            padding: 1em;
+            white-space: pre-wrap;
+        }
+    </string>
+</resources>

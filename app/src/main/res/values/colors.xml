@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="splash_background">#263238</color>
+
+    <color name="twenty_percent_black_overlay">#34000000</color>
+    <color name="fifty_percent_black_overlay">#88000000</color>
+
+    <color name="app_shortcut_default_foreground">@color/md_blue_grey_500</color>
+    <color name="app_shortcut_default_background">@color/md_grey_50</color>
+
+    <color name="transparent">#00000000</color>
+
+    <color name="semi_transparent">#20000000</color>
+
+    <color name="light_widget">#80FAFAFA</color>
+
+    <color name="dark_widget">#70212121</color>
+
+</resources>

@@ -1,0 +1,146 @@
+package com.ttop.cassette.ui.fragments.mainactivity.library.pager;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.os.Handler;
+
+import androidx.annotation.NonNull;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.ttop.cassette.R;
+import com.ttop.cassette.adapter.PlaylistAdapter;
+import com.ttop.cassette.interfaces.LoaderIds;
+import com.ttop.cassette.loader.PlaylistLoader;
+import com.ttop.cassette.misc.WrappedAsyncTaskLoader;
+import com.ttop.cassette.model.Playlist;
+import com.ttop.cassette.model.smartplaylist.HistoryPlaylist;
+import com.ttop.cassette.model.smartplaylist.LastAddedPlaylist;
+import com.ttop.cassette.model.smartplaylist.MyTopTracksPlaylist;
+import com.ttop.cassette.model.smartplaylist.NotRecentlyPlayedPlaylist;
+import com.ttop.cassette.util.PreferenceUtil;
+
+import java.util.ArrayList;
+
+/**
+ * @author Karim Abou Zeid (kabouzeid)
+ */
+public class PlaylistsFragment
+        extends AbsLibraryPagerRecyclerViewFragment<PlaylistAdapter, LinearLayoutManager>
+        implements LoaderManager.LoaderCallbacks<ArrayList<Playlist>>,
+                SharedPreferences.OnSharedPreferenceChangeListener {
+
+    private static final int LOADER_ID = LoaderIds.PLAYLISTS_FRAGMENT;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        PreferenceUtil.getInstance().registerOnSharedPreferenceChangedListener(this);
+
+        getLoaderManager().initLoader(LOADER_ID, null, this);
+    }
+
+    @Override
+    public void onDestroy() {
+        PreferenceUtil.getInstance().unregisterOnSharedPreferenceChangedListener(this);
+        super.onDestroy();
+    }
+
+    @NonNull
+    @Override
+    protected LinearLayoutManager createLayoutManager() {
+        return new LinearLayoutManager(getActivity());
+    }
+
+    @NonNull
+    @Override
+    protected PlaylistAdapter createAdapter() {
+        ArrayList<Playlist> dataSet = getAdapter() == null ? new ArrayList<>() : getAdapter().getDataSet();
+        return new PlaylistAdapter(getLibraryFragment().getMainActivity(), dataSet, getLibraryFragment());
+    }
+
+    @Override
+    protected int getEmptyMessage() {
+        return R.string.no_playlists;
+    }
+
+    @Override
+    @NonNull
+    public Loader<ArrayList<Playlist>> onCreateLoader(int id, Bundle args) {
+        return new AsyncPlaylistLoader(getActivity());
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<ArrayList<Playlist>> loader, ArrayList<Playlist> data) {
+        getAdapter().swapDataSet(data);
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<ArrayList<Playlist>> loader) {
+        getAdapter().swapDataSet(new ArrayList<>());
+    }
+
+    private static class AsyncPlaylistLoader extends WrappedAsyncTaskLoader<ArrayList<Playlist>> {
+        public AsyncPlaylistLoader(Context context) {
+            super(context);
+        }
+
+        private static ArrayList<Playlist> getAllPlaylists(Context context) {
+            ArrayList<Playlist> playlists = new ArrayList<>();
+
+            PreferenceUtil prefs = PreferenceUtil.getInstance();
+            if (prefs.getLastAddedCutoffTimeSecs() > 0) {
+                playlists.add(new LastAddedPlaylist(context));
+            }
+            if (prefs.getRecentlyPlayedCutoffTimeMillis() > 0) {
+                playlists.add(new HistoryPlaylist(context));
+            }
+            if (prefs.getNotRecentlyPlayedCutoffTimeMillis() > 0) {
+                playlists.add(new NotRecentlyPlayedPlaylist(context));
+            }
+            if (prefs.maintainTopTrackPlaylist()) {
+                playlists.add(new MyTopTracksPlaylist(context));
+            }
+
+            playlists.addAll(PlaylistLoader.getAllPlaylists(context));
+
+            return playlists;
+        }
+
+        @Override
+        public ArrayList<Playlist> loadInBackground() {
+            return getAllPlaylists(getContext());
+        }
+    }
+
+    @Override
+    public void onPlayingMetaChanged() {
+        // Update the smart playlists (played, not played, etc)
+        reload();
+    }
+
+    public void reload() {
+        LoaderManager.getInstance(this).restartLoader(LOADER_ID, null, this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        switch (key) {
+            case PreferenceUtil.LAST_ADDED_CUTOFF_V2:
+            case PreferenceUtil.RECENTLY_PLAYED_CUTOFF_V2:
+            case PreferenceUtil.NOT_RECENTLY_PLAYED_CUTOFF_V2:
+            case PreferenceUtil.MAINTAIN_TOP_TRACKS_PLAYLIST:
+                // This event can be called when the fragment is is detached mode
+                // In such situation, cannot call the reload (i.e. crash)
+                //     E AndroidRuntime: java.lang.IllegalStateException: Can't access ViewModels from detached fragment
+                //     E AndroidRuntime:        at androidx.fragment.app.Fragment.getViewModelStore(Unknown Source:32)
+                //     E AndroidRuntime:        at androidx.loader.app.LoaderManager.getInstance(Unknown Source:5)
+                // -> circumvent by delaying the reload
+                new Handler().postDelayed(this::reload, 100);
+                break;
+        }
+    }
+}
