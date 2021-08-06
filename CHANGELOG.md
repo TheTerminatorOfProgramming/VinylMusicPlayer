@@ -1,7 +1,8 @@
 # Changelog
 
 ## [1.0.0] - 2021-08-05
-## INITIAL VERSION ##
+
+Initial Version
 
 ## Added
 - Bluetooth &amp; Headphone Autoplay
